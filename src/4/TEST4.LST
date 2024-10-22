@@ -1,0 +1,472 @@
+                                                                    页     1
+                                                                    10-18-24
+                                                                    17:30:42
+伟福汇编器 V5.00                             Copyright (c) 1989, 2001 by CHY
+
+地址  机器码 源程序
+
+            ORG 0000H          ; 程序起始地址
+0000 800B   SJMP START         ; 跳转到程序开始位置
+            
+            ORG 000BH          ; 定时器0中断向量地址
+000B 018D   AJMP TIMER0_ISR    ; 定时器0中断服务程序入口
+            
+            START:
+000D 7590FF     MOV P1, #0FFH  ; 配置P1端口为输入（如果需要）
+0010 75A0FF     MOV P2, #0FFH  ; 配置P2端口为输入（如果需要）
+0013 75B0FF     MOV P3, #0FFH  ; 配置P3端口为输入（如果需要）
+            
+                ; 初始化时间为 00:00:00
+0016 7800       MOV R0, #0     ; 小时的十位
+0018 7900       MOV R1, #0     ; 小时的个位
+001A 7A00       MOV R2, #0     ; 分钟的十位
+001C 7B00       MOV R3, #0     ; 分钟的个位
+001E 7C00       MOV R4, #0     ; 秒的十位
+0020 7D00       MOV R5, #0     ; 秒的个位
+            
+                ; 初始化定时器0
+0022 758901     MOV TMOD, #01H ; 设置定时器0为模式1（16位定时器）
+0025 758C4F     MOV TH0, #04FH ; 定时器高字节初值
+0028 758AC0     MOV TL0, #0C0H ; 定时器低字节初值
+002B D28C       SETB TR0       ; 启动定时器0
+002D D2A9       SETB ET0       ; 使能定时器0中断
+002F D2AF       SETB EA        ; 使能全局中断
+            
+            MAIN_LOOP:
+                ; 显示秒的个位
+0031 908002     MOV DPTR, #08002H
+0034 7401       MOV A, #01H        ; 选择第6位数码管（Q7）
+0036 F0         MOVX @DPTR, A
+0037 908004     MOV DPTR, #08004H
+003A ED         MOV A, R5
+003B 11D8       ACALL CONVERT      ; 转换为段码
+003D F0         MOVX @DPTR, A
+003E 3117       ACALL DELAY        ; 延时
+            
+                ; 显示秒的十位
+0040 908002     MOV DPTR, #08002H
+0043 7402       MOV A, #02H        ; 选择第5位数码管（Q6）
+0045 F0         MOVX @DPTR, A
+0046 908004     MOV DPTR, #08004H
+0049 EC         MOV A, R4
+004A 11D8       ACALL CONVERT      ; 转换为段码
+004C F0         MOVX @DPTR, A
+004D 3117       ACALL DELAY        ; 延时
+            
+
+
+D:\奇妙电路实验\2024-10-11\TEST4.ASM                            
+ 
+                                                                    页     2
+                                                                    10-18-24
+                                                                    17:30:42
+伟福汇编器 V5.00                             Copyright (c) 1989, 2001 by CHY
+
+地址  机器码 源程序
+
+                ; 显示分钟的个位
+004F 908002     MOV DPTR, #08002H
+0052 7404       MOV A, #04H        ; 选择第4位数码管（Q5）
+0054 F0         MOVX @DPTR, A
+0055 908004     MOV DPTR, #08004H
+0058 EB         MOV A, R3
+0059 11D8       ACALL CONVERT      ; 转换为段码
+005B F0         MOVX @DPTR, A
+005C 3117       ACALL DELAY        ; 延时
+            
+                ; 显示分钟的十位
+005E 908002     MOV DPTR, #08002H
+0061 7408       MOV A, #08H        ; 选择第3位数码管（Q4）
+0063 F0         MOVX @DPTR, A
+0064 908004     MOV DPTR, #08004H
+0067 EA         MOV A, R2
+0068 11D8       ACALL CONVERT      ; 转换为段码
+006A F0         MOVX @DPTR, A
+006B 3117       ACALL DELAY        ; 延时
+            
+                ; 显示小时的个位
+006D 908002     MOV DPTR, #08002H
+0070 7410       MOV A, #10H        ; 选择第2位数码管（Q3）
+0072 F0         MOVX @DPTR, A
+0073 908004     MOV DPTR, #08004H
+0076 E9         MOV A, R1
+0077 11D8       ACALL CONVERT      ; 转换为段码
+0079 F0         MOVX @DPTR, A
+007A 3117       ACALL DELAY        ; 延时
+            
+                ; 显示小时的十位
+007C 908002     MOV DPTR, #08002H
+007F 7420       MOV A, #20H        ; 选择第1位数码管（Q2）
+0081 F0         MOVX @DPTR, A
+0082 908004     MOV DPTR, #08004H
+0085 E8         MOV A, R0
+0086 11D8       ACALL CONVERT      ; 转换为段码
+0088 F0         MOVX @DPTR, A
+0089 3117       ACALL DELAY        ; 延时
+            
+008B 80A4       SJMP MAIN_LOOP     ; 循环刷新显示
+            
+            TIMER0_ISR:
+                ; 定时器0中断服务程序
+                ; 每50ms进一次中断，累积10次为1秒
+008D C0E0       PUSH ACC
+008F C0D0       PUSH PSW
+            
+
+
+D:\奇妙电路实验\2024-10-11\TEST4.ASM                            
+ 
+                                                                    页     3
+                                                                    10-18-24
+                                                                    17:30:42
+伟福汇编器 V5.00                             Copyright (c) 1989, 2001 by CHY
+
+地址  机器码 源程序
+
+0091 E520       MOV A, COUNTER
+0093 04         INC A
+0094 B41408     CJNE A, #20, NOT_ONE_SECOND
+0097 7400       MOV A, #0
+0099 F520       MOV COUNTER, A
+009B 11AE       ACALL UPDATE_TIME
+009D 8002       SJMP END_ISR
+            
+            NOT_ONE_SECOND:
+009F F520       MOV COUNTER, A
+            
+            END_ISR:
+00A1 758C3C     MOV TH0, #3CH      ; 重装定时器初值
+00A4 758AB0     MOV TL0, #0B0H
+                ;MOV TH0, #0FFH      ; 重装定时器初值
+                ;MOV TL0, #0F0H       ; test
+00A7 C28D       CLR TF0            ; 清除定时器0溢出标志
+            
+00A9 D0D0       POP PSW
+00AB D0E0       POP ACC
+00AD 32         RETI
+            
+            UPDATE_TIME:
+                ; 更新时间
+00AE 0D         INC R5
+00AF BD0A25     CJNE R5, #0AH, END_UPDATE
+            
+                ; 秒个位进位到十位
+00B2 7D00       MOV R5, #00H
+00B4 0C         INC R4
+00B5 BC061F     CJNE R4, #06H, END_UPDATE
+            
+                ; 秒十位进位到分钟个位
+00B8 7C00       MOV R4, #00H
+00BA 0B         INC R3
+00BB BB0A19     CJNE R3, #0AH, END_UPDATE
+            
+                ; 分钟个位进位到十位
+00BE 7B00       MOV R3, #00H
+00C0 0A         INC R2
+00C1 BA0613     CJNE R2, #06H, END_UPDATE
+            
+                ; 分钟十位进位到小时个位
+00C4 7A00       MOV R2, #00H
+00C6 09         INC R1
+00C7 B80207     CJNE R0, #02H, TIME2 ; 小时十位进位后检查是否超过24小时
+00CA B90404     CJNE R1, #04H, TIME2
+00CD 7800       MOV R0, #00H
+
+
+D:\奇妙电路实验\2024-10-11\TEST4.ASM                            
+ 
+                                                                    页     4
+                                                                    10-18-24
+                                                                    17:30:42
+伟福汇编器 V5.00                             Copyright (c) 1989, 2001 by CHY
+
+地址  机器码 源程序
+
+00CF 7900       MOV R1, #00H
+            TIME2:    
+00D1 B90A03     CJNE R1, #0AH, END_UPDATE
+            
+                ; 小时个位进位到十位
+00D4 7900       MOV R1, #00H
+00D6 08         INC R0
+            
+            
+            
+            END_UPDATE:
+00D7 22         RET
+            
+            
+            CONVERT:
+                ; 数码管段码转换子程序
+                ; 输入: A = 0-9
+                ; 输出: A = 对应的段码
+00D8 B40003     CJNE A, #00H, DIGIT_1
+00DB 743F       MOV A, #3FH         ; 段码 0
+00DD 22         RET
+            DIGIT_1:
+00DE B40103     CJNE A, #01H, DIGIT_2
+00E1 7406       MOV A, #06H         ; 段码 1
+00E3 22         RET
+            DIGIT_2:
+00E4 B40203     CJNE A, #02H, DIGIT_3
+00E7 745B       MOV A, #5BH         ; 段码 2
+00E9 22         RET
+            DIGIT_3:
+00EA B40303     CJNE A, #03H, DIGIT_4
+00ED 744F       MOV A, #4FH         ; 段码 3
+00EF 22         RET
+            DIGIT_4:
+00F0 B40403     CJNE A, #04H, DIGIT_5
+00F3 7466       MOV A, #66H         ; 段码 4
+00F5 22         RET
+            DIGIT_5:
+00F6 B40503     CJNE A, #05H, DIGIT_6
+00F9 746D       MOV A, #6DH         ; 段码 5
+00FB 22         RET
+            DIGIT_6:
+00FC B40603     CJNE A, #06H, DIGIT_7
+00FF 747D       MOV A, #7DH         ; 段码 6
+0101 22         RET
+            DIGIT_7:
+0102 B40703     CJNE A, #07H, DIGIT_8
+0105 7407       MOV A, #07H         ; 段码 7
+
+
+D:\奇妙电路实验\2024-10-11\TEST4.ASM                            
+ 
+                                                                    页     5
+                                                                    10-18-24
+                                                                    17:30:42
+伟福汇编器 V5.00                             Copyright (c) 1989, 2001 by CHY
+
+地址  机器码 源程序
+
+0107 22         RET
+            DIGIT_8:
+0108 B40803     CJNE A, #08H, DIGIT_9
+010B 747F       MOV A, #7FH         ; 段码 8
+010D 22         RET
+            DIGIT_9:
+010E B40903     CJNE A, #09H, DIGIT_END
+0111 746F       MOV A, #6FH         ; 段码 9
+0113 22         RET
+            DIGIT_END:
+0114 7400       MOV A, #00H         ; 默认段码
+0116 22         RET
+            
+            DELAY:
+                ; 简单延时子程序
+0117 7E02       MOV R6, #2        ; 调整延时长度
+            DELAY_LOOP1:
+0119 7FFA       MOV R7, #250        ; 调整延时长度
+            DELAY_LOOP2:
+011B DFFE       DJNZ R7, DELAY_LOOP2
+011D DEFA       DJNZ R6, DELAY_LOOP1
+011F 22         RET
+            
+0120 00     COUNTER: DB 0           ; 定时器中断计数器
+            
+            END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+D:\奇妙电路实验\2024-10-11\TEST4.ASM                            
+ 
+                                                                    页     6
+                                                                    10-18-24
+                                                                    17:30:42
+伟福汇编器 V5.00                             Copyright (c) 1989, 2001 by CHY
+
+地址  机器码 源程序
+
+
+
+            符号                       值     类型
+
+            AC                       = 00D6H CONST 常量 
+            ACC                      = 00E0H CONST 常量 
+            B                        = 00F0H CONST 常量 
+            CONVERT                  = 00D8H CODE  标号 
+            COUNTER                  = 0120H CODE  标号 
+            CY                       = 00D7H CONST 常量 
+            DELAY                    = 0117H CODE  标号 
+            DELAY_LOOP1              = 0119H CODE  标号 
+            DELAY_LOOP2              = 011BH CODE  标号 
+            DIGIT_1                  = 00DEH CODE  标号 
+            DIGIT_2                  = 00E4H CODE  标号 
+            DIGIT_3                  = 00EAH CODE  标号 
+            DIGIT_4                  = 00F0H CODE  标号 
+            DIGIT_5                  = 00F6H CODE  标号 
+            DIGIT_6                  = 00FCH CODE  标号 
+            DIGIT_7                  = 0102H CODE  标号 
+            DIGIT_8                  = 0108H CODE  标号 
+            DIGIT_9                  = 010EH CODE  标号 
+            DIGIT_END                = 0114H CODE  标号 
+            DPH                      = 0083H CONST 常量 
+            DPL                      = 0082H CONST 常量 
+            EA                       = 00AFH CONST 常量 
+            END_ISR                  = 00A1H CODE  标号 
+            END_UPDATE               = 00D7H CODE  标号 
+            ES                       = 00ACH CONST 常量 
+            ET0                      = 00A9H CONST 常量 
+            ET1                      = 00ABH CONST 常量 
+            ET2                      = 00ADH CONST 常量 
+            EX0                      = 00A8H CONST 常量 
+            EX1                      = 00AAH CONST 常量 
+            EXEN2                    = 00CBH CONST 常量 
+            EXF2                     = 00CEH CONST 常量 
+            F0                       = 00D5H CONST 常量 
+            F1                       = 00D1H CONST 常量 
+            IE                       = 00A8H CONST 常量 
+            IE0                      = 0089H CONST 常量 
+            IE1                      = 008BH CONST 常量 
+            IP                       = 00B8H CONST 常量 
+            IT0                      = 0088H CONST 常量 
+            IT1                      = 008AH CONST 常量 
+            MAIN_LOOP                = 0031H CODE  标号 
+            NOT_ONE_SECOND           = 009FH CODE  标号 
+            OV                       = 00D2H CONST 常量 
+            P                        = 00D0H CONST 常量 
+
+
+D:\奇妙电路实验\2024-10-11\TEST4.ASM                            
+ 
+                                                                    页     7
+                                                                    10-18-24
+                                                                    17:30:42
+伟福汇编器 V5.00                             Copyright (c) 1989, 2001 by CHY
+
+地址  机器码 源程序
+
+            P0                       = 0080H CONST 常量 
+            P1                       = 0090H CONST 常量 
+            P2                       = 00A0H CONST 常量 
+            P3                       = 00B0H CONST 常量 
+            PCON                     = 0087H CONST 常量 
+            PS                       = 00BCH CONST 常量 
+            PSW                      = 00D0H CONST 常量 
+            PT0                      = 00B9H CONST 常量 
+            PT1                      = 00BBH CONST 常量 
+            PT2                      = 00BDH CONST 常量 
+            PX0                      = 00B8H CONST 常量 
+            PX1                      = 00BAH CONST 常量 
+            RB8                      = 009AH CONST 常量 
+            RCAP2H                   = 00CBH CONST 常量 
+            RCAP2L                   = 00CAH CONST 常量 
+            RCLK                     = 00CDH CONST 常量 
+            REN                      = 009CH CONST 常量 
+            RI                       = 0098H CONST 常量 
+            RL2                      = 00C8H CONST 常量 
+            RS0                      = 00D3H CONST 常量 
+            RS1                      = 00D4H CONST 常量 
+            SBUF                     = 0099H CONST 常量 
+            SCON                     = 0098H CONST 常量 
+            SM0                      = 009FH CONST 常量 
+            SM1                      = 009EH CONST 常量 
+            SM2                      = 009DH CONST 常量 
+            SP                       = 0081H CONST 常量 
+            START                    = 000DH CODE  标号 
+            T2                       = 00C9H CONST 常量 
+            T2CON                    = 00C8H CONST 常量 
+            T2MOD                    = 00C9H CONST 常量 
+            TB8                      = 009BH CONST 常量 
+            TCLK                     = 00CCH CONST 常量 
+            TCON                     = 0088H CONST 常量 
+            TF0                      = 008DH CONST 常量 
+            TF1                      = 008FH CONST 常量 
+            TF2                      = 00CFH CONST 常量 
+            TH0                      = 008CH CONST 常量 
+            TH1                      = 008DH CONST 常量 
+            TH2                      = 00CDH CONST 常量 
+            TI                       = 0099H CONST 常量 
+            TIME2                    = 00D1H CODE  标号 
+            TIMER0_ISR               = 008DH CODE  标号 
+            TL0                      = 008AH CONST 常量 
+            TL1                      = 008BH CONST 常量 
+            TL2                      = 00CCH CONST 常量 
+            TMOD                     = 0089H CONST 常量 
+            TR0                      = 008CH CONST 常量 
+
+
+D:\奇妙电路实验\2024-10-11\TEST4.ASM                            
+ 
+                                                                    页     8
+                                                                    10-18-24
+                                                                    17:30:42
+伟福汇编器 V5.00                             Copyright (c) 1989, 2001 by CHY
+
+地址  机器码 源程序
+
+            TR1                      = 008EH CONST 常量 
+            TR2                      = 00CAH CONST 常量 
+            UPDATE_TIME              = 00AEH CODE  标号 
+
+
+            公有符号:   95
+            私有符号:    0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+D:\奇妙电路实验\2024-10-11\TEST4.ASM                            
+ 

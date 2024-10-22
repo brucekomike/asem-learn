@@ -1,0 +1,177 @@
+                                                                    页     1
+                                                                    10-11-24
+                                                                    17:07:22
+伟福汇编器 V5.00                             Copyright (c) 1989, 2001 by CHY
+
+地址  机器码 源程序
+
+            ORG  000H
+0000 7A0A   MOV  R2, #0AH
+0002 7850   MOV  R0, #50H
+0004 E4     CLR  A
+            LOOP:
+0005 F6         MOV  @R0, A
+0006 08         INC  R0
+0007 04         INC A
+0008 DAFB       DJNZ  R2, LOOP
+000A E4         CLR A
+000B 7A0A       MOV R2, #0AH
+000D 7850       MOV R0, #50H
+000F 7940       MOV R1, #40H
+0011 8000       SJMP  LOOP2
+            LOOP2:
+0013 E6         MOV A, @R0
+0014 F7         MOV  @R1, A
+0015 08         INC  R0
+0016 09         INC R1
+0017 DAFA       DJNZ  R2, LOOP2
+0019 80FE       SJMP  $
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+C:\USERS\02\DESKTOP\2024-10-11\TEST3.ASM                        
+ 
+                                                                    页     2
+                                                                    10-11-24
+                                                                    17:07:22
+伟福汇编器 V5.00                             Copyright (c) 1989, 2001 by CHY
+
+地址  机器码 源程序
+
+
+
+            符号                       值     类型
+
+            AC                       = 00D6H CONST 常量 
+            ACC                      = 00E0H CONST 常量 
+            B                        = 00F0H CONST 常量 
+            CY                       = 00D7H CONST 常量 
+            DPH                      = 0083H CONST 常量 
+            DPL                      = 0082H CONST 常量 
+            EA                       = 00AFH CONST 常量 
+            ES                       = 00ACH CONST 常量 
+            ET0                      = 00A9H CONST 常量 
+            ET1                      = 00ABH CONST 常量 
+            ET2                      = 00ADH CONST 常量 
+            EX0                      = 00A8H CONST 常量 
+            EX1                      = 00AAH CONST 常量 
+            EXEN2                    = 00CBH CONST 常量 
+            EXF2                     = 00CEH CONST 常量 
+            F0                       = 00D5H CONST 常量 
+            F1                       = 00D1H CONST 常量 
+            IE                       = 00A8H CONST 常量 
+            IE0                      = 0089H CONST 常量 
+            IE1                      = 008BH CONST 常量 
+            IP                       = 00B8H CONST 常量 
+            IT0                      = 0088H CONST 常量 
+            IT1                      = 008AH CONST 常量 
+            LOOP                     = 0005H CODE  标号 
+            LOOP2                    = 0013H CODE  标号 
+            OV                       = 00D2H CONST 常量 
+            P                        = 00D0H CONST 常量 
+            P0                       = 0080H CONST 常量 
+            P1                       = 0090H CONST 常量 
+            P2                       = 00A0H CONST 常量 
+            P3                       = 00B0H CONST 常量 
+            PCON                     = 0087H CONST 常量 
+            PS                       = 00BCH CONST 常量 
+            PSW                      = 00D0H CONST 常量 
+            PT0                      = 00B9H CONST 常量 
+            PT1                      = 00BBH CONST 常量 
+            PT2                      = 00BDH CONST 常量 
+            PX0                      = 00B8H CONST 常量 
+            PX1                      = 00BAH CONST 常量 
+            RB8                      = 009AH CONST 常量 
+            RCAP2H                   = 00CBH CONST 常量 
+            RCAP2L                   = 00CAH CONST 常量 
+            RCLK                     = 00CDH CONST 常量 
+            REN                      = 009CH CONST 常量 
+
+
+C:\USERS\02\DESKTOP\2024-10-11\TEST3.ASM                        
+ 
+                                                                    页     3
+                                                                    10-11-24
+                                                                    17:07:22
+伟福汇编器 V5.00                             Copyright (c) 1989, 2001 by CHY
+
+地址  机器码 源程序
+
+            RI                       = 0098H CONST 常量 
+            RL2                      = 00C8H CONST 常量 
+            RS0                      = 00D3H CONST 常量 
+            RS1                      = 00D4H CONST 常量 
+            SBUF                     = 0099H CONST 常量 
+            SCON                     = 0098H CONST 常量 
+            SM0                      = 009FH CONST 常量 
+            SM1                      = 009EH CONST 常量 
+            SM2                      = 009DH CONST 常量 
+            SP                       = 0081H CONST 常量 
+            T2                       = 00C9H CONST 常量 
+            T2CON                    = 00C8H CONST 常量 
+            T2MOD                    = 00C9H CONST 常量 
+            TB8                      = 009BH CONST 常量 
+            TCLK                     = 00CCH CONST 常量 
+            TCON                     = 0088H CONST 常量 
+            TF0                      = 008DH CONST 常量 
+            TF1                      = 008FH CONST 常量 
+            TF2                      = 00CFH CONST 常量 
+            TH0                      = 008CH CONST 常量 
+            TH1                      = 008DH CONST 常量 
+            TH2                      = 00CDH CONST 常量 
+            TI                       = 0099H CONST 常量 
+            TL0                      = 008AH CONST 常量 
+            TL1                      = 008BH CONST 常量 
+            TL2                      = 00CCH CONST 常量 
+            TMOD                     = 0089H CONST 常量 
+            TR0                      = 008CH CONST 常量 
+            TR1                      = 008EH CONST 常量 
+            TR2                      = 00CAH CONST 常量 
+
+
+            公有符号:   74
+            私有符号:    0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+C:\USERS\02\DESKTOP\2024-10-11\TEST3.ASM                        
+ 

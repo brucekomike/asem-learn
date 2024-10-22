@@ -1,0 +1,295 @@
+                                                                    页     1
+                                                                    10-11-24
+                                                                    17:36:32
+伟福汇编器 V5.00                             Copyright (c) 1989, 2001 by CHY
+
+地址  机器码 源程序
+
+            ORG 0001H
+            
+            MAIN:
+0001 1173      ACALL INIT
+0003 117F      ACALL INIT1
+0005 1123      ACALL MULTFUNC
+0007 1173      ACALL INIT
+0009 1188      ACALL INIT2
+000B 1123      ACALL MULTFUNC
+000D 1173      ACALL INIT
+000F 1191      ACALL INIT3
+0011 1123      ACALL MULTFUNC
+0013 1173      ACALL INIT
+0015 119A      ACALL INIT4
+0017 1123      ACALL MULTFUNC
+0019 1173      ACALL INIT
+001B 11A3      ACALL INIT5
+001D 1123      ACALL MULTFUNC
+001F 1173      ACALL INIT
+0021 80DE      SJMP MAIN
+            
+            
+            
+            MULTFUNC:
+0023 EC         MOV A, R4
+0024 8AF0       MOV B, R2
+0026 A4         MUL AB
+0027 F526       MOV 26H, A
+0029 85F025     MOV 25H, B
+            
+002C EC         MOV A, R4
+002D 8BF0       MOV B, R3
+002F A4         MUL AB
+0030 2525       ADD A, 25H
+0032 F525       MOV 25H, A
+0034 E524       MOV A, 24H
+0036 3400       ADDC A, #00H
+0038 F524       MOV 24H, A
+003A E5F0       MOV A, B
+003C 2524       ADD A, 24H
+003E F524       MOV 24H, A
+0040 E523       MOV A, 23H
+0042 3400       ADDC A, #00H
+            
+0044 ED         MOV A, R5
+0045 8AF0       MOV B, R2
+0047 A4         MUL AB
+0048 2525       ADD A, 25H
+
+
+C:\USERS\02\DESKTOP\2024-10-11\TEST2-2.ASM                      
+ 
+                                                                    页     2
+                                                                    10-11-24
+                                                                    17:36:32
+伟福汇编器 V5.00                             Copyright (c) 1989, 2001 by CHY
+
+地址  机器码 源程序
+
+004A F525       MOV 25H, A
+004C E524       MOV A, 24H
+004E 3400       ADDC A, #00H
+0050 F524       MOV 24H, A
+0052 E5F0       MOV A, B
+0054 2524       ADD A, 24H
+0056 F524       MOV 24H, A
+0058 E523       MOV A, 23H
+005A 3400       ADDC A, #00H
+005C F523       MOV 23H, A
+            
+005E ED         MOV A, R5
+005F 8BF0       MOV B, R3
+0061 A4         MUL AB
+0062 2524       ADD A, 24H
+0064 F524       MOV 24H, A
+0066 E523       MOV A, 23H
+0068 3400       ADDC A, #00H
+006A F523       MOV 23H, A
+006C E5F0       MOV A, B
+006E 2523       ADD A, 23H
+0070 F523       MOV 23H, A
+            
+0072 22         RET
+            
+            INIT:
+0073 752300     MOV 23H, #00H
+0076 752400     MOV 24H, #00H
+0079 752500     MOV 25H, #00H
+007C 752600     MOV 26H, #00H
+            INIT1:
+007F 7DFF       MOV R5, #0FFH
+0081 7CFF       MOV R4, #0FFH
+0083 7BFF       MOV R3, #0FFH
+0085 7AFF       MOV R2, #0FFH
+0087 22         RET
+            INIT2:
+0088 7D00       MOV R5, #00H
+008A 7CFF       MOV R4, #0FFH
+008C 7B00       MOV R3, #00H
+008E 7AFF       MOV R2, #0FFH
+0090 22         RET
+            INIT3:
+0091 7DFF       MOV R5, #0FFH
+0093 7C00       MOV R4, #00H
+0095 7BFF       MOV R3, #0FFH
+0097 7A00       MOV R2, #00H
+0099 22     RET
+
+
+C:\USERS\02\DESKTOP\2024-10-11\TEST2-2.ASM                      
+ 
+                                                                    页     3
+                                                                    10-11-24
+                                                                    17:36:32
+伟福汇编器 V5.00                             Copyright (c) 1989, 2001 by CHY
+
+地址  机器码 源程序
+
+            INIT4:
+009A 7DF0       MOV R5, #0F0H
+009C 7CF0       MOV R4, #0F0H
+009E 7BF0       MOV R3, #0F0H
+00A0 7AF0       MOV R2, #0F0H
+00A2 22     RET
+            INIT5:
+00A3 7D0F       MOV R5, #0FH
+00A5 7CF0       MOV R4, #0F0H
+00A7 7B0F       MOV R3, #0FH
+00A9 7AF0       MOV R2, #0F0H
+00AB 22         RET
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+C:\USERS\02\DESKTOP\2024-10-11\TEST2-2.ASM                      
+ 
+                                                                    页     4
+                                                                    10-11-24
+                                                                    17:36:32
+伟福汇编器 V5.00                             Copyright (c) 1989, 2001 by CHY
+
+地址  机器码 源程序
+
+
+
+            符号                       值     类型
+
+            AC                       = 00D6H CONST 常量 
+            ACC                      = 00E0H CONST 常量 
+            B                        = 00F0H CONST 常量 
+            CY                       = 00D7H CONST 常量 
+            DPH                      = 0083H CONST 常量 
+            DPL                      = 0082H CONST 常量 
+            EA                       = 00AFH CONST 常量 
+            ES                       = 00ACH CONST 常量 
+            ET0                      = 00A9H CONST 常量 
+            ET1                      = 00ABH CONST 常量 
+            ET2                      = 00ADH CONST 常量 
+            EX0                      = 00A8H CONST 常量 
+            EX1                      = 00AAH CONST 常量 
+            EXEN2                    = 00CBH CONST 常量 
+            EXF2                     = 00CEH CONST 常量 
+            F0                       = 00D5H CONST 常量 
+            F1                       = 00D1H CONST 常量 
+            IE                       = 00A8H CONST 常量 
+            IE0                      = 0089H CONST 常量 
+            IE1                      = 008BH CONST 常量 
+            INIT                     = 0073H CODE  标号 
+            INIT1                    = 007FH CODE  标号 
+            INIT2                    = 0088H CODE  标号 
+            INIT3                    = 0091H CODE  标号 
+            INIT4                    = 009AH CODE  标号 
+            INIT5                    = 00A3H CODE  标号 
+            IP                       = 00B8H CONST 常量 
+            IT0                      = 0088H CONST 常量 
+            IT1                      = 008AH CONST 常量 
+            MAIN                     = 0001H CODE  标号 
+            MULTFUNC                 = 0023H CODE  标号 
+            OV                       = 00D2H CONST 常量 
+            P                        = 00D0H CONST 常量 
+            P0                       = 0080H CONST 常量 
+            P1                       = 0090H CONST 常量 
+            P2                       = 00A0H CONST 常量 
+            P3                       = 00B0H CONST 常量 
+            PCON                     = 0087H CONST 常量 
+            PS                       = 00BCH CONST 常量 
+            PSW                      = 00D0H CONST 常量 
+            PT0                      = 00B9H CONST 常量 
+            PT1                      = 00BBH CONST 常量 
+            PT2                      = 00BDH CONST 常量 
+            PX0                      = 00B8H CONST 常量 
+
+
+C:\USERS\02\DESKTOP\2024-10-11\TEST2-2.ASM                      
+ 
+                                                                    页     5
+                                                                    10-11-24
+                                                                    17:36:32
+伟福汇编器 V5.00                             Copyright (c) 1989, 2001 by CHY
+
+地址  机器码 源程序
+
+            PX1                      = 00BAH CONST 常量 
+            RB8                      = 009AH CONST 常量 
+            RCAP2H                   = 00CBH CONST 常量 
+            RCAP2L                   = 00CAH CONST 常量 
+            RCLK                     = 00CDH CONST 常量 
+            REN                      = 009CH CONST 常量 
+            RI                       = 0098H CONST 常量 
+            RL2                      = 00C8H CONST 常量 
+            RS0                      = 00D3H CONST 常量 
+            RS1                      = 00D4H CONST 常量 
+            SBUF                     = 0099H CONST 常量 
+            SCON                     = 0098H CONST 常量 
+            SM0                      = 009FH CONST 常量 
+            SM1                      = 009EH CONST 常量 
+            SM2                      = 009DH CONST 常量 
+            SP                       = 0081H CONST 常量 
+            T2                       = 00C9H CONST 常量 
+            T2CON                    = 00C8H CONST 常量 
+            T2MOD                    = 00C9H CONST 常量 
+            TB8                      = 009BH CONST 常量 
+            TCLK                     = 00CCH CONST 常量 
+            TCON                     = 0088H CONST 常量 
+            TF0                      = 008DH CONST 常量 
+            TF1                      = 008FH CONST 常量 
+            TF2                      = 00CFH CONST 常量 
+            TH0                      = 008CH CONST 常量 
+            TH1                      = 008DH CONST 常量 
+            TH2                      = 00CDH CONST 常量 
+            TI                       = 0099H CONST 常量 
+            TL0                      = 008AH CONST 常量 
+            TL1                      = 008BH CONST 常量 
+            TL2                      = 00CCH CONST 常量 
+            TMOD                     = 0089H CONST 常量 
+            TR0                      = 008CH CONST 常量 
+            TR1                      = 008EH CONST 常量 
+            TR2                      = 00CAH CONST 常量 
+
+
+            公有符号:   80
+            私有符号:    0
+
+
+
+
+
+
+
+
+
+
+C:\USERS\02\DESKTOP\2024-10-11\TEST2-2.ASM                      
+ 
